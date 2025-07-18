@@ -141,7 +141,7 @@ const surveyQuestions = [
     { id: 'q1_preferredExperts', question: "펫 전문가가 집으로 직접 찾아와 제공하는 서비스 중, 어떤 전문가를 원하시나요?", type: 'checkbox', options: [ { label: "훈련사", icon: "🎓" }, { label: "미용사", icon: "✂️" }, { label: "전문펫시터", icon: "🐾" }, { label: "수의사", icon: "🩺" }, { label: "영양사", icon: "🥗" } ], hasOther: true },
     { id: 'q2_newServiceIdeas', question: "우리 강아지와 관련해서 새로 생기면 좋을 것 같은 서비스가 있다면 가감 없이 적어주세요! (어떤 아이디어든 환영해요!)", type: 'textarea', minLength: 0, maxLength: 500 },
     { id: 'q3_previousServiceFeedback', question: "이전에 이용했던 펫 서비스가 있다면, 업체명과 이용 만족도(상/중/하), 그리고 개선되었으면 하는 점을 자유롭게 적어주세요.", type: 'textarea', minLength: 0, maxLength: 500 },
-    { id: 'q4_appropriateFee', question: "펫을 위한 맞춤형 프리미엄 서비스 “우리 아이답게, 우리 가족답게 — 오직 하나뿐인 프리미엄 케어” 서비스가 신설된다면 1시간 이용 시 적정 요금을 선택해주세요. (단일선택)", type: 'radio', options: ["1~2만원", "2~3만원", "3~4만원", "5~6만원"] }
+    { id: 'q4_appropriateFee', question: "펫을 위한 맞춤형 프리미엄 서비스가 신설된다면 1시간 이용 시 적정 요금을 선택해주세요. (단일선택)", type: 'radio', options: ["1~2만원", "2~3만원", "3~4만원", "5~6만원"] }
 ];
 
 // --- Main App Component ---
@@ -502,6 +502,13 @@ function App() {
           <div className="w-40 h-40 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-6">
             <span className="text-6xl">{mbtiResults[mbtiResult.type].nickname.split(' ').pop()}</span>
           </div>
+          {/* Moved survey button to be directly under the trophy icon */}
+          <button onClick={() => setPage('survey')} className="px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-lg hover:bg-blue-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 mt-6 mb-4"> {/* Added mt-6 and mb-4 for spacing */}
+            맞춤형 서비스 설문 참여하기
+          </button>
+          <p className="text-lg text-gray-700 mb-6 font-semibold bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded-r-lg" style={{ wordBreak: 'keep-all' }}>
+            <span className="font-bold text-purple-600">[{mbtiResult.type}]</span> 특성을 가진 우리 강아지, 어떤 맞춤형 케어가 필요할까요? <br/>우리 아이에게 필요한 맞춤형 케어를 원하시는 분만 클릭!
+          </p>
           <div className="bg-purple-50 p-6 rounded-xl text-left mb-6 shadow-inner space-y-3">
              <p style={{ wordBreak: 'keep-all' }}><strong>한 줄 요약:</strong> {resultData.summary}</p>
              <div className={isExpanded ? 'space-y-3' : 'hidden'}>
@@ -515,13 +522,6 @@ function App() {
                {isExpanded ? '간략히 보기' : '자세히 보기'}
              </button>
           </div>
-
-        <p className="text-lg text-gray-700 mb-6 font-semibold bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded-r-lg" style={{ wordBreak: 'keep-all' }}>
-          <span className="font-bold text-purple-600">[{mbtiResult.type}]</span> 특성을 가진 우리 강아지, 어떤 맞춤형 케어가 필요할까요? <br/>우리 아이에게 필요한 맞춤형 케어를 원하시는 분만 클릭!
-        </p>
-        <button onClick={() => setPage('survey')} className="px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-full shadow-lg hover:bg-blue-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
-          맞춤형 서비스 설문 참여하기
-        </button>
 
 
         </div>
@@ -937,7 +937,7 @@ function App() {
                     <h3 className="text-xl font-bold text-blue-700 mb-4">MBTI 유형별 통계</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
-                            <Pie data={stats.mbti} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>
+                            <Pie data={stats.mbti} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} fill={COLORS[0]} label>
                                 {stats.mbti.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                             </Pie>
                             <Tooltip />
@@ -952,7 +952,7 @@ function App() {
                             <XAxis type="number" />
                             <YAxis type="category" dataKey="name" width={80} />
                             <Tooltip />
-                            <Bar dataKey="value" fill="#82ca9d" />
+                            <Bar dataKey="value" fill={COLORS[1]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -965,7 +965,7 @@ function App() {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="value" fill="#ffc658" />
+                        <Bar dataKey="value" fill={COLORS[2]} />
                     </BarChart>
                 </ResponsiveContainer>
             </div>
@@ -1067,4 +1067,24 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-p
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex flex-col items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-3xl bg-white/80 backdrop-blur-sm p-6 md:p-10 rounded-3xl shadow-lg border border-gray-200">
+        <header className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 flex items-center justify-center">
+            {/* Admin login trigger icon with hover scale effect */}
+            <span onClick={handleAdminLogin} className="cursor-pointer text-4xl mr-3 hover:scale-110 transition-transform" title="관리자 모드">🐕</span>
+            강아지 MBTI 테스트
+          </h1>
+        </header>
+        <main>
+          {renderPage()}
+        </main>
+      </div>
+      {/* Modals for admin login and confirmations */}
+      {showAdminModal && <CustomModal onClose={() => setShowAdminModal(false)}>{modalContent}</CustomModal>}
+      {showConfirmModal && <CustomModal onClose={() => setShowConfirmModal(false)}>{modalContent}</CustomModal>}
+    </div>
+  );
+}
+
+export default App;
